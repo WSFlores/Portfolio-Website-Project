@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>William Flores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b1829;
+    --surface: #101e30;
+    --border: #1c2f46;
+    --border-hover: #2e4a6a;
+    --text: #e8edf5;
+    --muted: #4a6080;
+    --subtle: #1a2d45;
+    --accent: #fff;
+    --tag-bg: #0d1e30;
+    --radius: 8px;
+  }
+
+  html { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; }
+
+  body { min-height: 100vh; position: relative; }
+
+  #fractal-bg {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background: var(--bg);
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(11,24,41,0.90);
+    backdrop-filter: blur(12px);
+  }
+  .nav-inner {
+    max-width: 680px; margin: 0 auto; padding: 0 24px;
+    height: 56px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: -0.01em; }
+  .nav-links { display: flex; gap: 20px; align-items: center; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted); text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── Hero ── */
+  .hero { padding: 96px 0 80px; }
+  .hero-eyebrow {
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.0;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--muted); font-weight: 400;
+    line-height: 1.6; max-width: 420px;
+  }
+  .hero-links { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+  .social-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 400; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 13px; text-decoration: none;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .social-btn:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface); }
+  .social-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+  /* ── Divider ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ── Section ── */
+  section { padding: 64px 0; }
+  .section-label {
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 32px;
+  }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .section-header a {
+    font-size: 12px; color: var(--muted); text-decoration: none;
+    transition: color 0.15s;
+  }
+  .section-header a:hover { color: var(--text); }
+
+  /* ── Projects ── */
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 500px) { .projects-grid { grid-template-columns: 1fr; } }
+
+  .project-card {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; background: var(--surface);
+    transition: border-color 0.15s;
+    cursor: pointer;
+  }
+  .project-card:hover { border-color: var(--border-hover); }
+  .project-card.placeholder { opacity: 0.4; }
+  .project-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .project-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .project-tag {
+    display: inline-block; margin-top: 14px;
+    font-size: 11px; background: var(--tag-bg); border: 1px solid var(--border);
+    color: var(--muted); padding: 2px 8px; border-radius: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Blog ── */
+  .blog-list { display: flex; flex-direction: column; gap: 0; }
+  .blog-item {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 18px 0; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: opacity 0.15s;
+    text-decoration: none;
+    gap: 16px;
+  }
+  .blog-item:first-child { border-top: 1px solid var(--border); }
+  .blog-item:hover .blog-title { color: var(--accent); }
+  .blog-title { font-size: 15px; font-weight: 400; color: var(--text); transition: color 0.15s; }
+  .blog-meta { font-size: 12px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+  .blog-empty {
+    padding: 40px 0; text-align: center;
+    font-size: 14px; color: var(--muted); border-top: 1px solid var(--border);
+  }
+
+  .new-post-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 400; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 13px; cursor: pointer; background: none;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    font-family: inherit;
+  }
+  .new-post-btn:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface); }
+
+  /* ── Footer ── */
+  footer {
+    padding: 40px 0; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+
+  /* ── Modal ── */
+  .modal-backdrop {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: #080f1c; border: 1px solid var(--border);
+    border-radius: 12px; width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
+    animation: modalIn 0.18s ease;
+  }
+  @keyframes modalIn { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .modal-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-title { font-size: 15px; font-weight: 500; }
+  .modal-close {
+    background: none; border: none; color: var(--muted);
+    font-size: 20px; cursor: pointer; padding: 0 4px; line-height: 1;
+    transition: color 0.15s;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+
+  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .field input, .field textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 12px; color: var(--text);
+    font-family: inherit; font-size: 14px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field textarea:focus { border-color: #2a4a70; }
+  .field textarea { min-height: 140px; resize: vertical; line-height: 1.6; }
+
+  .drop-zone {
+    border: 1px dashed var(--border); border-radius: 6px;
+    padding: 28px; text-align: center; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+  }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: #2a4a70; background: var(--surface); }
+  .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .drop-zone-text { font-size: 13px; color: var(--muted); }
+  .drop-zone-text span { color: var(--text); }
+  .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .file-chip {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 5px; padding: 7px 10px; font-size: 12px;
+  }
+  .file-chip-name { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
+  .file-chip-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 0; line-height: 1; transition: color 0.15s; }
+  .file-chip-remove:hover { color: var(--text); }
+
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+  .btn-ghost {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px 16px; color: var(--muted); font-family: inherit;
+    font-size: 13px; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--border-hover); color: var(--text); }
+  .btn-primary {
+    background: #fff; border: 1px solid #fff; border-radius: 6px;
+    padding: 8px 16px; color: #000; font-family: inherit;
+    font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-primary:hover { background: #e0e0e0; }
+
+  /* ── Post view ── */
+  .post-view { display: none; }
+  .post-view.open { display: block; }
+  .main-view { display: block; }
+  .main-view.hidden { display: none; }
+
+  .post-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--muted); cursor: pointer;
+    background: none; border: none; font-family: inherit;
+    padding: 96px 0 40px; transition: color 0.15s;
+  }
+  .post-back:hover { color: var(--text); }
+  .post-header { margin-bottom: 48px; }
+  .post-header h1 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 600;
+    letter-spacing: -0.03em; color: var(--accent);
+    line-height: 1.15; margin-bottom: 16px;
+  }
+  .post-date { font-size: 13px; color: var(--muted); }
+  .post-body { font-size: 16px; color: #8aaccf; line-height: 1.75; }
+  .post-body p { margin-bottom: 20px; }
+  .post-media { margin: 32px 0; }
+  .post-media img, .post-media video {
+    width: 100%; border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">wf</span>
+    <div class="nav-links">
+      <a href="#projects">Projects</a>
+      <a href="#blog">Writing</a>
+      <a href="https://github.com/WSFlores" target="_blank">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main view -->
+<div class="main-view" id="mainView">
+<div class="container">
+
+  <!-- Hero -->
+  <header class="hero">
+    <p class="hero-eyebrow">Portfolio</p>
+    <h1>William<br>Flores</h1>
+    <p class="hero-sub">Applied Mathematics · UC Berkeley '28</p>
+    <div class="hero-links">
+      <a class="social-btn" href="https://github.com/WSFlores" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        WSFlores
+      </a>
+      <a class="social-btn" href="https://www.linkedin.com/in/william-flores-419192269/" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a class="social-btn" href="https://instagram.com/beepfish" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        @beepfish
+      </a>
+    </div>
+  </header>
+
+  <hr class="divider">
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="section-header">
+      <p class="section-label">Projects</p>
+      <a href="#">View all →</a>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card placeholder">
+        <p class="project-name">Coming soon</p>
+        <p class="project-desc">Projects will appear here once added.</p>
+        <span class="project-tag">placeholder</span>
+      </div>
+      <div class="project-card placeholder">
+        <p class="project-name">Work in progress</p>
+        <p class="project-desc">Building something interesting.</p>
+        <span class="project-tag">placeholder</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Blog -->
+  <section id="blog">
+    <div class="section-header">
+      <p class="section-label">Writing</p>
+      <button class="new-post-btn" onclick="openModal()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg>
+        New post
+      </button>
+    </div>
+    <div class="blog-list" id="blogList">
+      <div class="blog-empty" id="emptyState">No posts yet — write something.</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <footer>
+    <span>© 2025 William Flores</span>
+    <span>Applied Mathematics · UC Berkeley</span>
+  </footer>
+
+</div><!-- /container -->
+</div><!-- /main-view -->
+
+<!-- Post view -->
+<div class="post-view" id="postView">
+  <div class="container">
+    <button class="post-back" onclick="closePost()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2L3 7l5 5"/></svg>
+      Back
+    </button>
+    <div class="post-header">
+      <h1 id="postTitle"></h1>
+      <p class="post-date" id="postDate"></p>
+    </div>
+    <div class="post-media" id="postMedia"></div>
+    <div class="post-body" id="postBody"></div>
+  </div>
+</div>
+
+<!-- New Post Modal -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="handleBackdropClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New post</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="postTitleInput" placeholder="Post title">
+      </div>
+      <div class="field">
+        <label>Content</label>
+        <textarea id="postContentInput" placeholder="Write your post…"></textarea>
+      </div>
+      <div class="field">
+        <label>Media — images & videos</label>
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="fileInput" multiple accept="image/*,video/*" onchange="handleFiles(this.files)">
+          <p class="drop-zone-text"><span>Click to upload</span> or drag & drop<br><span style="font-size:11px;color:var(--muted)">PNG, JPG, GIF, MP4, MOV</span></p>
+        </div>
+        <div class="file-list" id="fileList"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="publishPost()">Publish</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let posts = [];
+  let pendingFiles = [];
+
+  // Drag-over styling
+  const dz = document.getElementById('dropZone');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('drag-over');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  function handleFiles(files) {
+    [...files].forEach(f => {
+      if (!pendingFiles.find(p => p.name === f.name)) pendingFiles.push(f);
+    });
+    renderFileList();
+  }
+
+  function renderFileList() {
+    const list = document.getElementById('fileList');
+    list.innerHTML = pendingFiles.map((f, i) => `
+      <div class="file-chip">
+        <span class="file-chip-name">${f.name}</span>
+        <button class="file-chip-remove" onclick="removeFile(${i})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function removeFile(i) {
+    pendingFiles.splice(i, 1);
+    renderFileList();
+  }
+
+  function openModal() {
+    document.getElementById('modalBackdrop').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modalBackdrop').classList.remove('open');
+    document.getElementById('postTitleInput').value = '';
+    document.getElementById('postContentInput').value = '';
+    pendingFiles = [];
+    renderFileList();
+  }
+
+  function handleBackdropClick(e) {
+    if (e.target === document.getElementById('modalBackdrop')) closeModal();
+  }
+
+  async function publishPost() {
+    const title = document.getElementById('postTitleInput').value.trim();
+    const content = document.getElementById('postContentInput').value.trim();
+    if (!title) { document.getElementById('postTitleInput').focus(); return; }
+
+    // Read files as data URLs for local storage
+    const mediaItems = await Promise.all(pendingFiles.map(f => new Promise(res => {
+      const r = new FileReader();
+      r.onload = () => res({ name: f.name, type: f.type.startsWith('video') ? 'video' : 'image', src: r.result });
+      r.readAsDataURL(f);
+    })));
+
+    const post = {
+      id: Date.now(),
+      title,
+      content,
+      media: mediaItems,
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    };
+
+    posts.unshift(post);
+    renderBlog();
+    closeModal();
+  }
+
+  function renderBlog() {
+    const list = document.getElementById('blogList');
+    const empty = document.getElementById('emptyState');
+    if (posts.length === 0) {
+      list.innerHTML = '<div class="blog-empty" id="emptyState">No posts yet — write something.</div>';
+      return;
+    }
+    list.innerHTML = posts.map(p => `
+      <div class="blog-item" onclick="openPost(${p.id})">
+        <span class="blog-title">${escHtml(p.title)}</span>
+        <span class="blog-meta">${p.date}</span>
+      </div>
+    `).join('');
+  }
+
+  function openPost(id) {
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    document.getElementById('postTitle').textContent = post.title;
+    document.getElementById('postDate').textContent = post.date;
+    document.getElementById('postBody').innerHTML = post.content
+      .split('\n').filter(Boolean).map(p => `<p>${escHtml(p)}</p>`).join('');
+
+    const mediaEl = document.getElementById('postMedia');
+    mediaEl.innerHTML = post.media.map(m =>
+      m.type === 'video'
+        ? `<video controls src="${m.src}"></video>`
+        : `<img src="${m.src}" alt="${escHtml(m.name)}">`
+    ).join('');
+
+    document.getElementById('mainView').classList.add('hidden');
+    document.getElementById('postView').classList.add('open');
+    window.scrollTo(0, 0);
+  }
+
+  function closePost() {
+    document.getElementById('postView').classList.remove('open');
+    document.getElementById('mainView').classList.remove('hidden');
+    window.scrollTo(0, 0);
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+<canvas id="fractal-bg"></canvas>
+
+<script>
+(function() {
+  const canvas = document.getElementById('fractal-bg');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    draw();
+  }
+
+  // Recursive vertex-based Sierpinski triangle
+  function sierpinski(ax, ay, bx, by, cx, cy, depth) {
+    if (depth === 0) {
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(bx, by);
+      ctx.lineTo(cx, cy);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(55, 125, 205, 0.11)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(100, 175, 255, 0.18)';
+      ctx.lineWidth = 0.55;
+      ctx.stroke();
+      return;
+    }
+    const mx1 = (ax + bx) / 2, my1 = (ay + by) / 2;
+    const mx2 = (bx + cx) / 2, my2 = (by + cy) / 2;
+    const mx3 = (ax + cx) / 2, my3 = (ay + cy) / 2;
+    sierpinski(ax, ay, mx1, my1, mx3, my3, depth - 1);
+    sierpinski(mx1, my1, bx, by, mx2, my2, depth - 1);
+    sierpinski(mx3, my3, mx2, my2, cx, cy, depth - 1);
+  }
+
+  function draw() {
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#0b1829';
+    ctx.fillRect(0, 0, w, h);
+
+    // Size the triangle to generously cover the viewport
+    const size = Math.max(w, h) * 1.55;
+    const triH = size * (Math.sqrt(3) / 2);
+
+    // Center the triangle vertically a bit high so it fills screen nicely
+    const cx = w / 2;
+    const cy = h / 2 + triH * 0.05;
+
+    const ax = cx,          ay = cy - triH * 0.667;   // top
+    const bx = cx - size/2, by = cy + triH * 0.333;   // bottom-left
+    const bcx = cx + size/2, bcy = cy + triH * 0.333; // bottom-right
+
+    sierpinski(ax, ay, bx, by, bcx, bcy, 7);
+  }
+
+  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; draw(); });
+  resize();
+})();
+</script>
+
+</body>
+</html>
