@@ -14,10 +14,10 @@
     --surface: #101e30;
     --border: #1c2f46;
     --border-hover: #2e4a6a;
-    --text: #ffffff;       /* pure white for body text */
-    --muted: #7a9cc0;      /* lighter blue-grey for secondary text */
-    --accent: #ffffff;     /* headings stay pure white */
+    --text: #e8edf5;
+    --muted: #4a6080;
     --subtle: #1a2d45;
+    --accent: #fff;
     --tag-bg: #0d1e30;
     --radius: 8px;
   }
@@ -123,34 +123,6 @@
     letter-spacing: 0.03em;
   }
 
-  /* ── Blog ── */
-  .blog-list { display: flex; flex-direction: column; gap: 0; }
-  .blog-item {
-    display: flex; align-items: baseline; justify-content: space-between;
-    padding: 18px 0; border-bottom: 1px solid var(--border);
-    cursor: pointer; transition: opacity 0.15s;
-    text-decoration: none;
-    gap: 16px;
-  }
-  .blog-item:first-child { border-top: 1px solid var(--border); }
-  .blog-item:hover .blog-title { color: var(--accent); }
-  .blog-title { font-size: 15px; font-weight: 400; color: var(--text); transition: color 0.15s; }
-  .blog-meta { font-size: 12px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
-  .blog-empty {
-    padding: 40px 0; text-align: center;
-    font-size: 14px; color: var(--muted); border-top: 1px solid var(--border);
-  }
-
-  .new-post-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 13px; font-weight: 400; color: var(--muted);
-    border: 1px solid var(--border); border-radius: 6px;
-    padding: 7px 13px; cursor: pointer; background: none;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-    font-family: inherit;
-  }
-  .new-post-btn:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface); }
-
   /* ── Footer ── */
   footer {
     padding: 40px 0; border-top: 1px solid var(--border);
@@ -159,105 +131,6 @@
     flex-wrap: wrap; gap: 12px;
   }
 
-  /* ── Modal ── */
-  .modal-backdrop {
-    display: none; position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
-    align-items: center; justify-content: center; padding: 24px;
-  }
-  .modal-backdrop.open { display: flex; }
-  .modal {
-    background: #080f1c; border: 1px solid var(--border);
-    border-radius: 12px; width: 100%; max-width: 560px;
-    max-height: 90vh; overflow-y: auto;
-    animation: modalIn 0.18s ease;
-  }
-  @keyframes modalIn { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
-
-  .modal-header {
-    padding: 20px 24px; border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .modal-title { font-size: 15px; font-weight: 500; }
-  .modal-close {
-    background: none; border: none; color: var(--muted);
-    font-size: 20px; cursor: pointer; padding: 0 4px; line-height: 1;
-    transition: color 0.15s;
-  }
-  .modal-close:hover { color: var(--text); }
-  .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 18px; }
-
-  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
-  .field input, .field textarea {
-    width: 100%; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 6px; padding: 10px 12px; color: var(--text);
-    font-family: inherit; font-size: 14px; outline: none;
-    transition: border-color 0.15s;
-  }
-  .field input:focus, .field textarea:focus { border-color: #2a4a70; }
-  .field textarea { min-height: 140px; resize: vertical; line-height: 1.6; }
-
-  .drop-zone {
-    border: 1px dashed var(--border); border-radius: 6px;
-    padding: 28px; text-align: center; cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    position: relative;
-  }
-  .drop-zone:hover, .drop-zone.drag-over { border-color: #2a4a70; background: var(--surface); }
-  .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  .drop-zone-text { font-size: 13px; color: var(--muted); }
-  .drop-zone-text span { color: var(--text); }
-  .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
-  .file-chip {
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 5px; padding: 7px 10px; font-size: 12px;
-  }
-  .file-chip-name { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
-  .file-chip-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 0; line-height: 1; transition: color 0.15s; }
-  .file-chip-remove:hover { color: var(--text); }
-
-  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
-  .btn-ghost {
-    background: none; border: 1px solid var(--border); border-radius: 6px;
-    padding: 8px 16px; color: var(--muted); font-family: inherit;
-    font-size: 13px; cursor: pointer; transition: all 0.15s;
-  }
-  .btn-ghost:hover { border-color: var(--border-hover); color: var(--text); }
-  .btn-primary {
-    background: #fff; border: 1px solid #fff; border-radius: 6px;
-    padding: 8px 16px; color: #000; font-family: inherit;
-    font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s;
-  }
-  .btn-primary:hover { background: #e0e0e0; }
-
-  /* ── Post view ── */
-  .post-view { display: none; }
-  .post-view.open { display: block; }
-  .main-view { display: block; }
-  .main-view.hidden { display: none; }
-
-  .post-back {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 13px; color: var(--muted); cursor: pointer;
-    background: none; border: none; font-family: inherit;
-    padding: 96px 0 40px; transition: color 0.15s;
-  }
-  .post-back:hover { color: var(--text); }
-  .post-header { margin-bottom: 48px; }
-  .post-header h1 {
-    font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 600;
-    letter-spacing: -0.03em; color: var(--accent);
-    line-height: 1.15; margin-bottom: 16px;
-  }
-  .post-date { font-size: 13px; color: var(--muted); }
-  .post-body { font-size: 16px; color: #8aaccf; line-height: 1.75; }
-  .post-body p { margin-bottom: 20px; }
-  .post-media { margin: 32px 0; }
-  .post-media img, .post-media video {
-    width: 100%; border-radius: var(--radius);
-    border: 1px solid var(--border);
-  }
 </style>
 </head>
 <body>
@@ -268,7 +141,6 @@
     <span class="nav-logo">wf</span>
     <div class="nav-links">
       <a href="#projects">Projects</a>
-      <a href="#blog">Writing</a>
       <a href="https://github.com/WSFlores" target="_blank">GitHub</a>
     </div>
   </div>
@@ -323,22 +195,6 @@
 
   <hr class="divider">
 
-  <!-- Blog -->
-  <section id="blog">
-    <div class="section-header">
-      <p class="section-label">Writing</p>
-      <button class="new-post-btn" onclick="openModal()">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg>
-        New post
-      </button>
-    </div>
-    <div class="blog-list" id="blogList">
-      <div class="blog-empty" id="emptyState">No posts yet — write something.</div>
-    </div>
-  </section>
-
-  <hr class="divider">
-
   <footer>
     <span>© 2025 William Flores</span>
     <span>Applied Mathematics · UC Berkeley</span>
@@ -347,175 +203,7 @@
 </div><!-- /container -->
 </div><!-- /main-view -->
 
-<!-- Post view -->
-<div class="post-view" id="postView">
-  <div class="container">
-    <button class="post-back" onclick="closePost()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2L3 7l5 5"/></svg>
-      Back
-    </button>
-    <div class="post-header">
-      <h1 id="postTitle"></h1>
-      <p class="post-date" id="postDate"></p>
-    </div>
-    <div class="post-media" id="postMedia"></div>
-    <div class="post-body" id="postBody"></div>
-  </div>
-</div>
 
-<!-- New Post Modal -->
-<div class="modal-backdrop" id="modalBackdrop" onclick="handleBackdropClick(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">New post</span>
-      <button class="modal-close" onclick="closeModal()">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>Title</label>
-        <input type="text" id="postTitleInput" placeholder="Post title">
-      </div>
-      <div class="field">
-        <label>Content</label>
-        <textarea id="postContentInput" placeholder="Write your post…"></textarea>
-      </div>
-      <div class="field">
-        <label>Media — images & videos</label>
-        <div class="drop-zone" id="dropZone">
-          <input type="file" id="fileInput" multiple accept="image/*,video/*" onchange="handleFiles(this.files)">
-          <p class="drop-zone-text"><span>Click to upload</span> or drag & drop<br><span style="font-size:11px;color:var(--muted)">PNG, JPG, GIF, MP4, MOV</span></p>
-        </div>
-        <div class="file-list" id="fileList"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="publishPost()">Publish</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  let posts = [];
-  let pendingFiles = [];
-
-  // Drag-over styling
-  const dz = document.getElementById('dropZone');
-  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
-  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
-  dz.addEventListener('drop', e => {
-    e.preventDefault(); dz.classList.remove('drag-over');
-    handleFiles(e.dataTransfer.files);
-  });
-
-  function handleFiles(files) {
-    [...files].forEach(f => {
-      if (!pendingFiles.find(p => p.name === f.name)) pendingFiles.push(f);
-    });
-    renderFileList();
-  }
-
-  function renderFileList() {
-    const list = document.getElementById('fileList');
-    list.innerHTML = pendingFiles.map((f, i) => `
-      <div class="file-chip">
-        <span class="file-chip-name">${f.name}</span>
-        <button class="file-chip-remove" onclick="removeFile(${i})">×</button>
-      </div>
-    `).join('');
-  }
-
-  function removeFile(i) {
-    pendingFiles.splice(i, 1);
-    renderFileList();
-  }
-
-  function openModal() {
-    document.getElementById('modalBackdrop').classList.add('open');
-  }
-
-  function closeModal() {
-    document.getElementById('modalBackdrop').classList.remove('open');
-    document.getElementById('postTitleInput').value = '';
-    document.getElementById('postContentInput').value = '';
-    pendingFiles = [];
-    renderFileList();
-  }
-
-  function handleBackdropClick(e) {
-    if (e.target === document.getElementById('modalBackdrop')) closeModal();
-  }
-
-  async function publishPost() {
-    const title = document.getElementById('postTitleInput').value.trim();
-    const content = document.getElementById('postContentInput').value.trim();
-    if (!title) { document.getElementById('postTitleInput').focus(); return; }
-
-    // Read files as data URLs for local storage
-    const mediaItems = await Promise.all(pendingFiles.map(f => new Promise(res => {
-      const r = new FileReader();
-      r.onload = () => res({ name: f.name, type: f.type.startsWith('video') ? 'video' : 'image', src: r.result });
-      r.readAsDataURL(f);
-    })));
-
-    const post = {
-      id: Date.now(),
-      title,
-      content,
-      media: mediaItems,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    };
-
-    posts.unshift(post);
-    renderBlog();
-    closeModal();
-  }
-
-  function renderBlog() {
-    const list = document.getElementById('blogList');
-    const empty = document.getElementById('emptyState');
-    if (posts.length === 0) {
-      list.innerHTML = '<div class="blog-empty" id="emptyState">No posts yet — write something.</div>';
-      return;
-    }
-    list.innerHTML = posts.map(p => `
-      <div class="blog-item" onclick="openPost(${p.id})">
-        <span class="blog-title">${escHtml(p.title)}</span>
-        <span class="blog-meta">${p.date}</span>
-      </div>
-    `).join('');
-  }
-
-  function openPost(id) {
-    const post = posts.find(p => p.id === id);
-    if (!post) return;
-    document.getElementById('postTitle').textContent = post.title;
-    document.getElementById('postDate').textContent = post.date;
-    document.getElementById('postBody').innerHTML = post.content
-      .split('\n').filter(Boolean).map(p => `<p>${escHtml(p)}</p>`).join('');
-
-    const mediaEl = document.getElementById('postMedia');
-    mediaEl.innerHTML = post.media.map(m =>
-      m.type === 'video'
-        ? `<video controls src="${m.src}"></video>`
-        : `<img src="${m.src}" alt="${escHtml(m.name)}">`
-    ).join('');
-
-    document.getElementById('mainView').classList.add('hidden');
-    document.getElementById('postView').classList.add('open');
-    window.scrollTo(0, 0);
-  }
-
-  function closePost() {
-    document.getElementById('postView').classList.remove('open');
-    document.getElementById('mainView').classList.remove('hidden');
-    window.scrollTo(0, 0);
-  }
-
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-</script>
 <canvas id="fractal-bg"></canvas>
 
 <script>
